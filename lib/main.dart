@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Play Android',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.red,
       ),
       home: BottomNavigation(),
     );
