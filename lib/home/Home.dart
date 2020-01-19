@@ -1,5 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,7 +10,10 @@ class Home extends StatefulWidget {
 }
 
 //TODO: 数据转模型  上拉加载更多 下拉刷新数据
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final _homeUrl = 'https://www.wanandroid.com/article/list/0/json';
 
   Future _requestData() async {
@@ -22,6 +26,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       alignment: Alignment.center,
       child: FutureBuilder(

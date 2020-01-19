@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'tabbar/Tabbar.dart';
+
+import 'package:play_android/bottom_navigation/bottom_navigation.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Tabbar(),
+      home: BottomNavigation(),
     );
   }
 }
