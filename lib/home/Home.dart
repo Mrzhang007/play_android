@@ -26,6 +26,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   var _listData = <dynamic>[];
   int _currentPage = 0;
   LoadMoreStatus _loadMorestatus = LoadMoreStatus.complete;
+  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -40,26 +41,40 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   void _onLoadMore() {
-    if (_loadMorestatus == LoadMoreStatus.isLoading) {
-      return;
-    }
+    if (_loadMorestatus == LoadMoreStatus.isLoading) return;
+    if (_isRefreshing) return;
     setState(() {
       _loadMorestatus = LoadMoreStatus.isLoading;
     });
-    print('加载更多');
+    _loadHomeData(isLoadMore: true);
   }
 
-  void _loadHomeData({int page = 0}) async {
+  void _loadHomeData({bool isLoadMore = false}) async {
     try {
-      Response response = await Dio().get('$host/article/list/$page/json');
+      Response response =
+          await Dio().get('$host/article/list/$_currentPage/json');
       Map responseData = response.data;
       if (responseData['errorCode'] == 0) {
         Map data = response.data['data'];
-        List listDate = data['datas'];
-        // print(listDate.length);
-        setState(() {
-          _listData = listDate;
-        });
+        List<dynamic> listDate = data['datas'];
+        print('加载的条数：' +
+            listDate.length.toString() +
+            '当前页：' +
+            _currentPage.toString());
+        if (isLoadMore) {
+          //加载更多
+          setState(() {
+            _listData.addAll(listDate);
+            _loadMorestatus = LoadMoreStatus.complete;
+          });
+        } else {
+          setState(() {
+            _listData = listDate;
+          });
+          //下拉刷新之后 更新刷新状态
+          _isRefreshing = false;
+        }
+        _currentPage = ++_currentPage;
       } else {
         print('请求错误');
       }
@@ -69,8 +84,12 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   Future _onRefresh() async {
+    if (_loadMorestatus == LoadMoreStatus.isLoading) return;
+    if (_isRefreshing) return;
+    _isRefreshing = true;
+    print('上拉刷新');
     _currentPage = 0;
-    _listData.clear();
+    _listData.clear(); //刷新需要清空数据，
     _loadHomeData();
     return null;
   }
