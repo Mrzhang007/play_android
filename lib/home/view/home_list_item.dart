@@ -1,55 +1,67 @@
 import 'package:flutter/material.dart';
 
+import 'package:play_android/home/home_detail.dart';
+
 class HomeListItem extends StatelessWidget {
   HomeListItem({Key key, this.itemData}) : super(key: key);
 
   final Map itemData;
+
+  void _onItemPress(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => HomeDetail(
+              url: itemData['link'],
+            )));
+  }
 
   @override
   Widget build(BuildContext context) {
     String shareUser = itemData['shareUser'];
     String niceShareDate = itemData['niceShareDate'];
     bool collect = itemData['collect'];
-    return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                    child: Text(itemData['title'],
-                        maxLines: 2,
-                        style: TextStyle(
-                          color: Color(0xFF000000),
-                          fontSize: 16,
-                        )),
-                  ),
-                  Row(
+    return FlatButton(
+        onPressed: () => _onItemPress(context),
+        child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('分享人：$shareUser',
-                          style: TextStyle(
-                              color: Color(0xFF666666), fontSize: 14)),
                       Container(
-                        margin: EdgeInsets.only(left: 10),
-                        child: Text('分类：$niceShareDate',
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                        child: Text(itemData['title'],
+                            maxLines: 2,
                             style: TextStyle(
-                                color: Color(0xFF666666), fontSize: 14)),
+                              color: Color(0xFF000000),
+                              fontSize: 16,
+                            )),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text('分享人：$shareUser',
+                              style: TextStyle(
+                                  color: Color(0xFF666666), fontSize: 14)),
+                          Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Text('分类：$niceShareDate',
+                                style: TextStyle(
+                                    color: Color(0xFF666666), fontSize: 14)),
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
-              ),
-            ),
-            Icon(
-              Icons.favorite,
-              color:
-                  collect ? Theme.of(context).primaryColor : Color(0xFFBFBFBF),
-            ),
-          ],
-        ));
+                  ),
+                ),
+                Icon(
+                  Icons.favorite,
+                  color: collect
+                      ? Theme.of(context).primaryColor
+                      : Color(0xFFBFBFBF),
+                ),
+              ],
+            )));
   }
 }
 
