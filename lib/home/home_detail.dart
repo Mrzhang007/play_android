@@ -20,22 +20,3 @@ class HomeDetail extends StatelessWidget {
     );
   }
 }
-
-// class _HomeDetailState extends State<HomeDetail> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('网页'),
-//       ),
-//       body: Container(
-//         height: 700,
-//         width: 400,
-//         color: Colors.red,
-//         child: WebView(
-//           initialUrl: 'https://www.baidu.com/',
-//         ),
-//       ),
-//     );
-//   }
-// }
