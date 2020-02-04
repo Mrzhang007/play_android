@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
+import 'package:play_android/home/model/home_article_model.dart';
 
 import 'package:play_android/home/view/home_list_item.dart';
 
@@ -23,7 +26,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   static const host = 'https://www.wanandroid.com';
 
   ScrollController _controller = ScrollController();
-  var _listData = <dynamic>[];
+  var _listData = <HomeArticleModel>[];
   int _currentPage = 0;
   LoadMoreStatus _loadMorestatus = LoadMoreStatus.complete;
   bool _isRefreshing = false;
@@ -38,6 +41,16 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       }
     });
     _loadHomeData();
+
+    _learnModalJson();
+  }
+
+  void _learnModalJson() {
+    //一个JSON格式的用户列表字符串
+    String jsonStr = '[{"name":"Jack"},{"name":"Rose"}]';
+    //将JSON字符串转为Dart对象(此处是List)
+    List list = json.decode(jsonStr);
+    print(list[0]['name']);
   }
 
   void _onLoadMore() {
@@ -56,7 +69,8 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       Map responseData = response.data;
       if (responseData['errorCode'] == 0) {
         Map data = response.data['data'];
-        List<dynamic> listDate = data['datas'];
+        List<HomeArticleModel> listDate =
+            HomeArticleModel.objectArrayWithKeyValuesArray(data['datas']);
         print('加载的条数：' +
             listDate.length.toString() +
             '当前页：' +

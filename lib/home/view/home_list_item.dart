@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 
 import 'package:play_android/home/home_detail.dart';
+import 'package:play_android/home/model/home_article_model.dart';
 
 class HomeListItem extends StatelessWidget {
   HomeListItem({Key key, this.itemData}) : super(key: key);
 
-  final Map itemData;
+  final HomeArticleModel itemData;
 
   void _onItemPress(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => HomeDetail(
-              url: itemData['link'],
+              url: itemData.link,
             )));
   }
 
   @override
   Widget build(BuildContext context) {
-    String shareUser = itemData['shareUser'];
-    String niceShareDate = itemData['niceShareDate'];
-    bool collect = itemData['collect'];
+    String shareUser = itemData.shareUser;
+    String niceShareDate = itemData.niceShareDate;
+    bool collect = itemData.collect;
     return FlatButton(
         onPressed: () => _onItemPress(context),
         child: Container(
@@ -31,7 +32,7 @@ class HomeListItem extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                        child: Text(itemData['title'],
+                        child: Text(itemData.title,
                             maxLines: 2,
                             style: TextStyle(
                               color: Color(0xFF000000),
@@ -45,7 +46,7 @@ class HomeListItem extends StatelessWidget {
                                   color: Color(0xFF666666), fontSize: 14)),
                           Container(
                             margin: EdgeInsets.only(left: 10),
-                            child: Text('分类：$niceShareDate',
+                            child: Text('时间：$niceShareDate',
                                 style: TextStyle(
                                     color: Color(0xFF666666), fontSize: 14)),
                           )
