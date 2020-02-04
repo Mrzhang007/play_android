@@ -44,11 +44,15 @@ class HomeListItem extends StatelessWidget {
                           Text('分享人：$shareUser',
                               style: TextStyle(
                                   color: Color(0xFF666666), fontSize: 14)),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            child: Text('时间：$niceShareDate',
-                                style: TextStyle(
-                                    color: Color(0xFF666666), fontSize: 14)),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text('时间：$niceShareDate',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      color: Color(0xFF666666), fontSize: 14)),
+                            ),
                           )
                         ],
                       )
