@@ -9,11 +9,15 @@ class HomeListItem extends StatelessWidget {
   final HomeArticleModel itemData;
 
   void _onItemPress(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomeDetail(
-              url: itemData.link,
-              title: itemData.title,
-            )));
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => HomeDetail(
+    //           url: itemData.link,
+    //           title: itemData.title,
+    //         )));
+    Navigator.pushNamed(context, 'homeDetail', arguments: {
+      'url': itemData.link,
+      'title': itemData.title,
+    });
   }
 
   @override
