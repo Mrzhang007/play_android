@@ -14,19 +14,35 @@ class HomeArticleModel {
   /// 链接
   final String link;
 
-  HomeArticleModel(
-      {this.shareUser,
-      this.niceShareDate,
-      this.title,
-      this.collect,
-      this.link});
+  /// 是否置顶  1 置顶  0不置顶
+  final int type;
+
+  /// 是否标记 新 tag
+  final bool fresh;
+
+  /// 作者
+  final String author;
+
+  HomeArticleModel({
+    this.shareUser,
+    this.niceShareDate,
+    this.title,
+    this.collect,
+    this.link,
+    this.type,
+    this.fresh,
+    this.author,
+  });
 
   HomeArticleModel.fromJson(Map<String, dynamic> json)
       : shareUser = json['shareUser'],
         niceShareDate = json['niceShareDate'],
         title = json['title'],
         collect = json['collect'],
-        link = json['link'];
+        link = json['link'],
+        type = json['type'],
+        fresh = json['fresh'],
+        author = json['author'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,6 +51,9 @@ class HomeArticleModel {
       'title': title,
       'collect': collect,
       'link': link,
+      'type': type,
+      'fresh': fresh,
+      'author': author,
     };
   }
 

@@ -21,6 +21,9 @@ class HomeListItem extends StatelessWidget {
     String shareUser = itemData.shareUser;
     String niceShareDate = itemData.niceShareDate;
     bool collect = itemData.collect;
+    int type = itemData.type;
+    String author = itemData.author;
+    bool fresh = itemData.fresh;
     return FlatButton(
         onPressed: () => _onItemPress(context),
         child: Container(
@@ -42,7 +45,9 @@ class HomeListItem extends StatelessWidget {
                       ),
                       Row(
                         children: <Widget>[
-                          Text('分享人：$shareUser',
+                          type == 1 ? _tag(context, '置顶') : Text(''),
+                          fresh ? _tag(context, '新') : Text(''),
+                          Text(type == 1 ? '作者：$author' : '分享人：$shareUser',
                               style: TextStyle(
                                   color: Color(0xFF666666), fontSize: 14)),
                           Expanded(
@@ -69,40 +74,21 @@ class HomeListItem extends StatelessWidget {
               ],
             )));
   }
+
+  Widget _tag(BuildContext context, String title) {
+    return Container(
+      margin: EdgeInsets.only(right: 4),
+      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 11),
+      ),
+    );
+  }
 }
-
-/**
- * {
-        "apkLink":"",
-        "audit":1,
-        "author":"",
-        "chapterId":502,
-        "chapterName":"自助",
-        "collect":false,
-        "courseId":13,
-        "desc":"",
-        "envelopePic":"",
-        "fresh":false,
-        "id":11545,
-        "link":"https://juejin.im/post/5e2135b251882521245bb0e8",
-        "niceDate":"2天前",
-        "niceShareDate":"2天前",
-        "origin":"",
-        "prefix":"",
-        "projectLink":"",
-        "publishTime":1579240835000,
-        "selfVisible":0,
-        "shareDate":1579235694000,
-        "shareUser":"rain9155",
-        "superChapterId":494,
-        "superChapterName":"广场Tab",
-        "tags":[
-
-        ],
-        "title":"这是一份关于HTTP协议的学习总结",
-        "type":0,
-        "userId":12884,
-        "visible":1,
-        "zan":0
-    }
- */

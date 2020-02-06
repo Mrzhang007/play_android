@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
 
+import 'package:play_android/common/api.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 import 'package:play_android/home/view/home_list_item.dart';
 
@@ -21,8 +22,8 @@ enum LoadMoreStatus {
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; //保存状态
-  static const host = 'https://www.wanandroid.com';
 
+  Dio _dio = Dio();
   ScrollController _controller = ScrollController();
   var _listData = <HomeArticleModel>[];
   int _currentPage = 0;
@@ -52,11 +53,22 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
 
   void _loadHomeData({bool isLoadMore = false}) async {
     try {
-      Response response =
-          await Dio().get('$host/article/list/$_currentPage/json');
+      String url = Api.articleList + '$_currentPage/json';
+      if (!isLoadMore) {
+        Response topArticle = await Dio().get(Api.articleTop);
+        Map topResponseData = topArticle.data;
+        if (topResponseData['errorCode'] == 0) {
+          print(topResponseData);
+          List data = topResponseData['data'];
+          List<HomeArticleModel> listDate =
+              HomeArticleModel.objectArrayWithKeyValuesArray(data);
+          _listData.addAll(listDate);
+        }
+      }
+      Response response = await Dio().get(url);
       Map responseData = response.data;
       if (responseData['errorCode'] == 0) {
-        Map data = response.data['data'];
+        Map data = responseData['data'];
         List<HomeArticleModel> listDate =
             HomeArticleModel.objectArrayWithKeyValuesArray(data['datas']);
         print('加载的条数：' +
@@ -71,7 +83,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
           });
         } else {
           setState(() {
-            _listData = listDate;
+            _listData.addAll(listDate);
           });
           //下拉刷新之后 更新刷新状态
           _isRefreshing = false;
