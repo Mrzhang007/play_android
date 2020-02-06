@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
-import 'package:play_android/home/model/home_article_model.dart';
 
+import 'package:play_android/home/model/home_article_model.dart';
 import 'package:play_android/home/view/home_list_item.dart';
 
 class Home extends StatefulWidget {
@@ -41,16 +39,6 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       }
     });
     _loadHomeData();
-
-    _learnModalJson();
-  }
-
-  void _learnModalJson() {
-    //一个JSON格式的用户列表字符串
-    String jsonStr = '[{"name":"Jack"},{"name":"Rose"}]';
-    //将JSON字符串转为Dart对象(此处是List)
-    List list = json.decode(jsonStr);
-    print(list[0]['name']);
   }
 
   void _onLoadMore() {

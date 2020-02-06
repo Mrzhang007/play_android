@@ -12,6 +12,7 @@ class HomeListItem extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => HomeDetail(
               url: itemData.link,
+              title: itemData.title,
             )));
   }
 
