@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import 'package:play_android/bottom_navigation/bottom_navigation.dart';
+import 'package:play_android/common/global.dart';
 import 'package:play_android/common/routes.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Global.init().then((e) {
+    WidgetsFlutterBinding.ensureInitialized();
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

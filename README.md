@@ -31,3 +31,5 @@ samples, guidance on mobile development, and a full API reference.
 ### 加载本地图片
 
 ### 增加Loading和toast库bot_toast
+
+### 登录数据持久化：shared_preferences

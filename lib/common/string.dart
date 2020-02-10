@@ -10,4 +10,10 @@ class KString {
 
   /// 我的
   static const String bottom_nav_mine = '我的';
+
+  /// 缓存用户登录数据的key
+  static const String userInfoKey = 'userInfoKey';
+
+  /// 缓存用户登录的用户名
+  static const String userNameKey = 'userNameKey';
 }

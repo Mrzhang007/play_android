@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:play_android/common/index.dart';
 
@@ -22,8 +24,16 @@ class _LoginState extends State<Login> {
   FocusNode _pwdFocusNode = FocusNode();
   // FocusScopeNode _focusScopeNode;
 
-  String _userName;
   String _pwd;
+  TextEditingController _userNameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (Global.isLogin) {
+      _userNameController.text = Global.user.username;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +78,7 @@ class _LoginState extends State<Login> {
                   ),
                   TextField(
                     focusNode: _userNameFocusNode,
-                    onChanged: (String value) {
-                      _userName = value;
-                    },
+                    controller: _userNameController,
                     autofocus: false,
                     decoration: InputDecoration(
                         labelText: "用户名",
@@ -152,7 +160,7 @@ class _LoginState extends State<Login> {
 
   /// 登录
   void _login() async {
-    if (_userName == null) {
+    if (_userNameController.text == null || _userNameController.text == '') {
       BotToast.showText(text: '请输入用户名', align: Alignment.center);
       return;
     }
@@ -163,7 +171,7 @@ class _LoginState extends State<Login> {
     _userNameFocusNode.unfocus();
     _pwdFocusNode.unfocus();
     Map<String, String> params = {
-      'username': _userName,
+      'username': _userNameController.text,
       'password': _pwd,
     };
     BotToast.showLoading();
@@ -173,9 +181,18 @@ class _LoginState extends State<Login> {
     BotToast.closeAllLoading();
     if (resp['errorCode'] == 0) {
       BotToast.showText(text: '登录成功！', align: Alignment.center);
+      Map userInfo = resp['data'];
+      // User.fromJson(userInfo);
+      //存储用户数据
+      _storageUserInfo(userInfo);
     } else {
       String msg = resp['errorMsg'];
       BotToast.showText(text: msg, align: Alignment.center);
     }
+  }
+
+  void _storageUserInfo(Map userInfo) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(KString.userInfoKey, jsonEncode(userInfo));
   }
 }
