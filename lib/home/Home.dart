@@ -55,7 +55,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     try {
       String url = Api.articleList + '$_currentPage/json';
       if (!isLoadMore) {
-        Response topArticle = await Dio().get(Api.articleTop);
+        Response topArticle = await _dio.get(Api.articleTop);
         Map topResponseData = topArticle.data;
         if (topResponseData['errorCode'] == 0) {
           print(topResponseData);
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
           _listData.addAll(listDate);
         }
       }
-      Response response = await Dio().get(url);
+      Response response = await _dio.get(url);
       Map responseData = response.data;
       if (responseData['errorCode'] == 0) {
         Map data = responseData['data'];

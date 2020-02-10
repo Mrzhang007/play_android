@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:play_android/auth/login.dart';
 
-import 'package:play_android/home/home_detail.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 
 class HomeListItem extends StatelessWidget {
@@ -69,11 +69,24 @@ class HomeListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.favorite,
-                  color: collect
-                      ? Theme.of(context).primaryColor
-                      : Color(0xFFBFBFBF),
+                IconButton(
+                  onPressed: () {
+                    // Navigator.pushNamed(context, 'login');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Login();
+                          },
+                          fullscreenDialog: true,
+                        ));
+                  },
+                  icon: Icon(
+                    Icons.favorite,
+                    color: collect
+                        ? Theme.of(context).primaryColor
+                        : Color(0xFFBFBFBF),
+                  ),
                 ),
               ],
             )));

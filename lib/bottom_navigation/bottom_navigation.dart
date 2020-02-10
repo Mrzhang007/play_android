@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:play_android/home/home.dart';
 import 'package:play_android/project/project.dart';
+import 'package:play_android/common/index.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -44,15 +45,15 @@ class _BottomNavigationState extends State<BottomNavigation>
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('首页'),
+            title: Text(KString.bottom_nav_home),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            title: Text('知识体系'),
+            title: Text(KString.bottom_nav_knowledge),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            title: Text('项目'),
+            title: Text(KString.bottom_nav_project),
           ),
         ],
         currentIndex: _selectedIndex,
