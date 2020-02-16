@@ -69,7 +69,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     String url = Api.articleList + '$_currentPage/json';
     if (!isLoadMore) {
       HttpResp httpResp = await HttpUtlis.get(Api.articleTop);
-      if (httpResp.data != null) {
+      if (httpResp.status == Status.succeed) {
         List data = httpResp.data;
         List<HomeArticleModel> listDate =
             HomeArticleModel.objectArrayWithKeyValuesArray(data);
@@ -77,7 +77,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       }
     }
     HttpResp responseData = await HttpUtlis.get(url);
-    if (responseData.data != null) {
+    if (responseData.status == Status.succeed) {
       Map data = responseData.data;
       List<HomeArticleModel> listDate =
           HomeArticleModel.objectArrayWithKeyValuesArray(data['datas']);
@@ -127,23 +127,23 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
             itemCount: _listData.length + 1,
             itemBuilder: (BuildContext context, int index) {
               if (_listData.length == index) {
-                if (_loadMorestatus == LoadMoreStatus.isLoading) {
-                  // 显示加载跟多页面
-                  return Container(
-                    padding: const EdgeInsets.all(16.0),
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                        width: 24.0,
-                        height: 24.0,
-                        child: CircularProgressIndicator(strokeWidth: 2.0)),
-                  );
-                } else {
-                  return null;
-                }
+                // 显示加载跟多页面
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                      width: 24.0,
+                      height: 24.0,
+                      child: CircularProgressIndicator(strokeWidth: 2.0)),
+                );
               }
               var item = _listData[index];
               return HomeListItem(
                 itemData: item,
+                onCollectPressed: () {
+                  item.collect = !item.collect;
+                  setState(() {});
+                },
               );
             },
             separatorBuilder: (BuildContext context, int index) =>

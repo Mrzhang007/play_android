@@ -1,20 +1,20 @@
-import 'dart:io';
-
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-
-import 'package:dio/dio.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 import 'package:play_android/auth/login.dart';
 import 'package:play_android/common/index.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 
 class HomeListItem extends StatelessWidget {
-  HomeListItem({Key key, this.itemData}) : super(key: key);
-  Dio _dio = Dio();
+  HomeListItem({
+    Key key,
+    @required this.itemData,
+    @required this.onCollectPressed,
+  }) : super(key: key);
 
   final HomeArticleModel itemData;
+
+  final VoidCallback onCollectPressed;
 
   void _onItemPress(BuildContext context) {
     // Navigator.of(context).push(MaterialPageRoute(
@@ -105,18 +105,22 @@ class HomeListItem extends StatelessWidget {
   }
 
   void _collect() async {
-    String url = Api.collect + itemData.id.toString() + '/json';
-    List<Cookie> cookies = [
-      Cookie('loginUserName', 'zhangzhong'),
-      Cookie('loginUserPassword', '123456'),
-    ];
-    CookieJar cookieJar = CookieJar();
-    cookieJar.saveFromResponse(Uri.parse(host), cookies);
-    print(cookieJar.loadForRequest(Uri.parse(host)));
-    _dio.interceptors.add(CookieManager(cookieJar));
-    Response response = await _dio.post(url);
-    Map resp = response.data;
-    print(resp.toString());
+    bool collect = itemData.collect;
+    String url;
+    if (collect) {
+      url = Api.uncollect + itemData.id.toString() + '/json';
+    } else {
+      url = Api.collect + itemData.id.toString() + '/json';
+    }
+    HttpResp resp = await HttpUtlis.post(url);
+    if (resp.status == Status.succeed) {
+      if (collect) {
+        BotToast.showText(text: '取消收藏成功', align: Alignment.center);
+      } else {
+        BotToast.showText(text: '收藏成功', align: Alignment.center);
+      }
+    }
+    onCollectPressed();
   }
 
   Widget _tag(BuildContext context, String title) {

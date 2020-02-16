@@ -9,12 +9,16 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 import 'package:play_android/common/index.dart';
 
+enum Status { succeed, failed, error } // 接口请求成功，失败，异常
+
 class HttpResp<T> {
   final T data;
   final dynamic exception;
+  final Status status;
   HttpResp({
     this.data,
     this.exception,
+    this.status,
   });
 }
 
@@ -30,14 +34,16 @@ class HttpUtlis {
       print('GET请求返回数据----------->' + responseMap.toString());
       if (responseMap['errorCode'] == 0) {
         //成功后可能接着请求。所以不closeAllLoading
-        return HttpResp(data: responseMap['data'], exception: null);
+        return HttpResp(
+            data: responseMap['data'], exception: null, status: Status.succeed);
       } else {
         BotToast.closeAllLoading();
-        BotToast.showText(text: responseMap['errorMsg'], align: Alignment.center);
-        return HttpResp(data: null, exception: null);
+        BotToast.showText(
+            text: responseMap['errorMsg'], align: Alignment.center);
+        return HttpResp(data: null, exception: null, status: Status.failed);
       }
     } catch (e) {
-      return HttpResp(data: null, exception: e);
+      return HttpResp(data: null, exception: e, status: Status.error);
     }
   }
 
@@ -50,14 +56,16 @@ class HttpUtlis {
       print('POST请求返回数据----------->' + responseMap.toString());
       if (responseMap['errorCode'] == 0) {
         //成功后可能接着请求。所以不closeAllLoading
-        return HttpResp(data: responseMap['data'], exception: null);
+        return HttpResp(
+            data: responseMap['data'], exception: null, status: Status.succeed);
       } else {
         BotToast.closeAllLoading();
-        BotToast.showText(text: responseMap['errorMsg'], align: Alignment.center);
-        return HttpResp(data: null, exception: null);
+        BotToast.showText(
+            text: responseMap['errorMsg'], align: Alignment.center);
+        return HttpResp(data: null, exception: null, status: Status.failed);
       }
     } catch (e) {
-      return HttpResp(data: null, exception: e);
+      return HttpResp(data: null, exception: e, status: Status.error);
     }
   }
 

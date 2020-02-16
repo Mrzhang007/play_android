@@ -9,7 +9,7 @@ class HomeArticleModel {
   final String title;
 
   /// 是否收藏
-  final bool collect;
+  bool collect;
 
   /// 链接
   final String link;
