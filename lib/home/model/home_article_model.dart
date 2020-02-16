@@ -23,6 +23,9 @@ class HomeArticleModel {
   /// 作者
   final String author;
 
+  /// 文章的id
+  final int id;
+
   HomeArticleModel({
     this.shareUser,
     this.niceShareDate,
@@ -32,6 +35,7 @@ class HomeArticleModel {
     this.type,
     this.fresh,
     this.author,
+    this.id,
   });
 
   HomeArticleModel.fromJson(Map<String, dynamic> json)
@@ -42,7 +46,8 @@ class HomeArticleModel {
         link = json['link'],
         type = json['type'],
         fresh = json['fresh'],
-        author = json['author'];
+        author = json['author'],
+        id = json['id'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -54,6 +59,7 @@ class HomeArticleModel {
       'type': type,
       'fresh': fresh,
       'author': author,
+      'id': id,
     };
   }
 

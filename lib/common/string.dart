@@ -16,4 +16,7 @@ class KString {
 
   /// 缓存用户登录的用户名
   static const String userNameKey = 'userNameKey';
+
+  /// 缓存用户密码
+  static const String passwordKey = 'passwordKey';
 }

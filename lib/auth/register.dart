@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import 'package:play_android/common/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -156,16 +158,26 @@ class _RegisterState extends State<Register> {
       'repassword': _rePwd,
     };
     BotToast.showLoading();
-    Response response = await _dio.post(Api.register, queryParameters: params);
-    print(response.data);
-    Map resp = response.data;
-    BotToast.closeAllLoading();
-    if (resp['errorCode'] == 0) {
+
+    HttpResp resp = await HttpUtlis.post(Api.register, params: params);
+    if (resp.data != null) {
+      BotToast.closeAllLoading();
       BotToast.showText(text: '恭喜您，注册成功！', align: Alignment.center);
-    } else {
-      String msg = resp['errorMsg'];
-      BotToast.showText(text: msg, align: Alignment.center);
+      Map userInfo = resp.data;
+      _storageUserInfo(userInfo, _pwd);
     }
+  }
+  /// 存储用户数据  刷新首页列表
+  void _storageUserInfo(Map userInfo, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(KString.userInfoKey, jsonEncode(userInfo));
+    prefs.setString(KString.passwordKey, password);
+    // 存储一下全局信息
+    Global.init().then((e) {
+      // 刷新首页数据
+      eventBus.fire(UserLoggedInEvent(userInfo));
+      Navigator.pop(context);
+    });
   }
 }
 

@@ -1,10 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:play_android/auth/login.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+
+import 'package:play_android/auth/login.dart';
+import 'package:play_android/common/index.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 
 class HomeListItem extends StatelessWidget {
   HomeListItem({Key key, this.itemData}) : super(key: key);
+  Dio _dio = Dio();
 
   final HomeArticleModel itemData;
 
@@ -71,15 +79,19 @@ class HomeListItem extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, 'login');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Login();
-                          },
-                          fullscreenDialog: true,
-                        ));
+                    if (Global.isLogin) {
+                      //收藏功能
+                      _collect();
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Login();
+                            },
+                            fullscreenDialog: true,
+                          ));
+                    }
                   },
                   icon: Icon(
                     Icons.favorite,
@@ -90,6 +102,21 @@ class HomeListItem extends StatelessWidget {
                 ),
               ],
             )));
+  }
+
+  void _collect() async {
+    String url = Api.collect + itemData.id.toString() + '/json';
+    List<Cookie> cookies = [
+      Cookie('loginUserName', 'zhangzhong'),
+      Cookie('loginUserPassword', '123456'),
+    ];
+    CookieJar cookieJar = CookieJar();
+    cookieJar.saveFromResponse(Uri.parse(host), cookies);
+    print(cookieJar.loadForRequest(Uri.parse(host)));
+    _dio.interceptors.add(CookieManager(cookieJar));
+    Response response = await _dio.post(url);
+    Map resp = response.data;
+    print(resp.toString());
   }
 
   Widget _tag(BuildContext context, String title) {

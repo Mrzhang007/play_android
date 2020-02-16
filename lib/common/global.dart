@@ -9,6 +9,7 @@ class Global {
   static SharedPreferences _prefs;
   static User user = User();
   static bool isLogin;
+  static String password;
 
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -23,8 +24,11 @@ class Global {
         print('global init error$e');
         isLogin = false;
       }
-    }else{
+    } else {
       isLogin = false;
     }
+    // 密码
+    var pwd = _prefs.getString(KString.passwordKey);
+    if (pwd != null) password = pwd;
   }
 }

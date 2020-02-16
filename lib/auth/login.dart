@@ -175,24 +175,24 @@ class _LoginState extends State<Login> {
       'password': _pwd,
     };
     BotToast.showLoading();
-    Response response = await _dio.post(Api.login, queryParameters: params);
-    print(response.data);
-    Map resp = response.data;
-    BotToast.closeAllLoading();
-    if (resp['errorCode'] == 0) {
+    HttpResp resp = await HttpUtlis.post(Api.login, params: params);
+    if (resp.data != null) {
+      BotToast.closeAllLoading();
       BotToast.showText(text: '登录成功！', align: Alignment.center);
-      Map userInfo = resp['data'];
-      // User.fromJson(userInfo);
-      //存储用户数据
-      _storageUserInfo(userInfo);
-    } else {
-      String msg = resp['errorMsg'];
-      BotToast.showText(text: msg, align: Alignment.center);
+      Map userInfo = resp.data;
+      _storageUserInfo(userInfo, _pwd);
     }
   }
 
-  void _storageUserInfo(Map userInfo) async {
+  void _storageUserInfo(Map userInfo, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(KString.userInfoKey, jsonEncode(userInfo));
+    prefs.setString(KString.passwordKey, password);
+    // 存储一下全局信息
+    Global.init().then((e) {
+      // 刷新首页数据
+      eventBus.fire(UserLoggedInEvent(userInfo));
+      Navigator.pop(context);
+    });
   }
 }

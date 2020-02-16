@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 import 'package:play_android/common/api.dart';
+import 'package:play_android/common/index.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 import 'package:play_android/home/view/home_list_item.dart';
+
 // TODO: 用户登录 首页banner
 class Home extends StatefulWidget {
   @override
@@ -23,12 +25,12 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; //保存状态
 
-  Dio _dio = Dio();
   ScrollController _controller = ScrollController();
   var _listData = <HomeArticleModel>[];
   int _currentPage = 0;
   LoadMoreStatus _loadMorestatus = LoadMoreStatus.complete;
   bool _isRefreshing = false;
+  var _loginSubscription;
 
   @override
   void initState() {
@@ -40,6 +42,18 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       }
     });
     _loadHomeData();
+    // 注册eventbus  不加这个的UserLoggedInEvent  就表示订阅所有的事件
+    _loginSubscription = eventBus.on<UserLoggedInEvent>().listen((event) {
+      print('==========dddd....>>>' + event.toString());
+      _onRefresh(); // 刷新首页数据
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // 取消订阅
+    _loginSubscription.cancel();
   }
 
   void _onLoadMore() {
@@ -52,48 +66,39 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   void _loadHomeData({bool isLoadMore = false}) async {
-    try {
-      String url = Api.articleList + '$_currentPage/json';
-      if (!isLoadMore) {
-        Response topArticle = await _dio.get(Api.articleTop);
-        Map topResponseData = topArticle.data;
-        if (topResponseData['errorCode'] == 0) {
-          print(topResponseData);
-          List data = topResponseData['data'];
-          List<HomeArticleModel> listDate =
-              HomeArticleModel.objectArrayWithKeyValuesArray(data);
-          _listData.addAll(listDate);
-        }
-      }
-      Response response = await _dio.get(url);
-      Map responseData = response.data;
-      if (responseData['errorCode'] == 0) {
-        Map data = responseData['data'];
+    String url = Api.articleList + '$_currentPage/json';
+    if (!isLoadMore) {
+      HttpResp httpResp = await HttpUtlis.get(Api.articleTop);
+      if (httpResp.data != null) {
+        List data = httpResp.data;
         List<HomeArticleModel> listDate =
-            HomeArticleModel.objectArrayWithKeyValuesArray(data['datas']);
-        print('加载的条数：' +
-            listDate.length.toString() +
-            '当前页：' +
-            _currentPage.toString());
-        if (isLoadMore) {
-          //加载更多
-          setState(() {
-            _listData.addAll(listDate);
-            _loadMorestatus = LoadMoreStatus.complete;
-          });
-        } else {
-          setState(() {
-            _listData.addAll(listDate);
-          });
-          //下拉刷新之后 更新刷新状态
-          _isRefreshing = false;
-        }
-        _currentPage = ++_currentPage;
-      } else {
-        print('请求错误');
+            HomeArticleModel.objectArrayWithKeyValuesArray(data);
+        _listData.addAll(listDate);
       }
-    } catch (e) {
-      print(e);
+    }
+    HttpResp responseData = await HttpUtlis.get(url);
+    if (responseData.data != null) {
+      Map data = responseData.data;
+      List<HomeArticleModel> listDate =
+          HomeArticleModel.objectArrayWithKeyValuesArray(data['datas']);
+      print('加载的条数：' +
+          listDate.length.toString() +
+          '当前页：' +
+          _currentPage.toString());
+      if (isLoadMore) {
+        //加载更多
+        setState(() {
+          _listData.addAll(listDate);
+          _loadMorestatus = LoadMoreStatus.complete;
+        });
+      } else {
+        setState(() {
+          _listData.addAll(listDate);
+        });
+        //下拉刷新之后 更新刷新状态
+        _isRefreshing = false;
+      }
+      _currentPage = ++_currentPage;
     }
   }
 

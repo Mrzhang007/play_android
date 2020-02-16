@@ -13,4 +13,7 @@ class Api {
 
   /// 用户登录
   static const String login = '$host/user/login';
+
+  /// 收藏文字 https://www.wanandroid.com/lg/collect/1165/json   文章id，拼接在链接中。
+  static const String collect = '$host/lg/collect/';
 }
