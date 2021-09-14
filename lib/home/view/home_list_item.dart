@@ -36,7 +36,7 @@ class HomeListItem extends StatelessWidget {
     int type = itemData.type;
     String author = itemData.author;
     bool fresh = itemData.fresh;
-    return FlatButton(
+    return TextButton(
         onPressed: () => _onItemPress(context),
         child: Container(
             padding: const EdgeInsets.all(16.0),

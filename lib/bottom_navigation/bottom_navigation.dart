@@ -45,15 +45,15 @@ class _BottomNavigationState extends State<BottomNavigation>
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text(KString.bottom_nav_home),
+            label: KString.bottom_nav_home,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            title: Text(KString.bottom_nav_knowledge),
+            label: KString.bottom_nav_knowledge,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            title: Text(KString.bottom_nav_project),
+            label: KString.bottom_nav_project,
           ),
         ],
         currentIndex: _selectedIndex,

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import 'package:play_android/common/index.dart';
@@ -18,8 +17,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  Dio _dio = Dio();
-
   FocusNode _userNameFocusNode = FocusNode();
   FocusNode _pwdFocusNode = FocusNode();
   FocusNode _rePwdFocusNode = FocusNode();
@@ -36,24 +33,25 @@ class _RegisterState extends State<Register> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 22, 0),
-                  height: 22,
-                  width: 22,
-                  child: FlatButton(
-                    textColor: Colors.white,
-                    onPressed: () {
+            new Container(
+              margin: new EdgeInsets.fromLTRB(25, 10, 25, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Image(
-                      image: AssetImage('images/close.png'),
+                    child: new Container(
+                      height: 22,
+                      width: 22,
+                      child: Image(
+                        image: AssetImage('images/close.png'),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: 48, right: 48),
@@ -110,11 +108,16 @@ class _RegisterState extends State<Register> {
                         child: Container(
                           margin: EdgeInsets.only(top: 15),
                           height: 40,
-                          child: RaisedButton(
-                              color: Theme.of(context).primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
+                          child: ElevatedButton(
+                              style: new ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).primaryColor),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                  ),
+                                ),
                               ),
                               onPressed: _register,
                               child: Text(
@@ -137,15 +140,15 @@ class _RegisterState extends State<Register> {
   }
 
   void _register() async {
-    if (_userName == null) {
+    if (_userName == '') {
       BotToast.showText(text: '请输入用户名', align: Alignment.center);
       return;
     }
-    if (_pwd == null) {
+    if (_pwd == '') {
       BotToast.showText(text: '请输入密码', align: Alignment.center);
       return;
     }
-    if (_rePwd == null) {
+    if (_rePwd == '') {
       BotToast.showText(text: '请再次输入密码', align: Alignment.center);
       return;
     }
@@ -167,6 +170,7 @@ class _RegisterState extends State<Register> {
       _storageUserInfo(userInfo, _pwd);
     }
   }
+
   /// 存储用户数据  刷新首页列表
   void _storageUserInfo(Map userInfo, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

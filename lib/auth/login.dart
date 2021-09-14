@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dio/dio.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +17,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  Dio _dio = Dio();
-
   FocusNode _userNameFocusNode = FocusNode();
   FocusNode _pwdFocusNode = FocusNode();
   // FocusScopeNode _focusScopeNode;
@@ -42,24 +39,25 @@ class _LoginState extends State<Login> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 22, 0),
-                  height: 22,
-                  width: 22,
-                  child: FlatButton(
-                    textColor: Colors.white,
-                    onPressed: () {
+            new Container(
+              margin: new EdgeInsets.fromLTRB(25, 10, 25, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Image(
-                      image: AssetImage('images/close.png'),
+                    child: new Container(
+                      height: 22,
+                      width: 22,
+                      child: Image(
+                        image: AssetImage('images/close.png'),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: 48, right: 48),
@@ -103,11 +101,16 @@ class _LoginState extends State<Login> {
                         child: Container(
                           margin: EdgeInsets.only(top: 15),
                           height: 40,
-                          child: RaisedButton(
-                              color: Theme.of(context).primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
+                          child: ElevatedButton(
+                              style: new ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).primaryColor),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                  ),
+                                ),
                               ),
                               onPressed: _login,
                               child: Text(
@@ -127,19 +130,23 @@ class _LoginState extends State<Login> {
                         child: Container(
                           margin: EdgeInsets.only(top: 15),
                           height: 40,
-                          child: RaisedButton(
-                              color: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                              ),
-                              onPressed: _register,
-                              child: Text(
-                                '注册',
-                                style: TextStyle(
-                                  color: Colors.white,
+                          child: ElevatedButton(
+                            style: new ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
                                 ),
-                              )),
+                              ),
+                            ),
+                            onPressed: _register,
+                            child: Text(
+                              '注册',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -160,11 +167,11 @@ class _LoginState extends State<Login> {
 
   /// 登录
   void _login() async {
-    if (_userNameController.text == null || _userNameController.text == '') {
+    if (_userNameController.text == '') {
       BotToast.showText(text: '请输入用户名', align: Alignment.center);
       return;
     }
-    if (_pwd == null) {
+    if (_pwd == '') {
       BotToast.showText(text: '请输入密码', align: Alignment.center);
       return;
     }
