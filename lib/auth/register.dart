@@ -25,9 +25,9 @@ class _RegisterState extends State<Register> {
   FocusNode _rePwdFocusNode = FocusNode();
   // FocusScopeNode _focusScopeNode;
 
-  String _userName;
-  String _pwd;
-  String _rePwd;
+  String _userName = '';
+  String _pwd = '';
+  String _rePwd = '';
 
   @override
   Widget build(BuildContext context) {

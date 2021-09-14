@@ -27,15 +27,15 @@ class HomeArticleModel {
   final int id;
 
   HomeArticleModel({
-    this.shareUser,
-    this.niceShareDate,
-    this.title,
-    this.collect,
-    this.link,
-    this.type,
-    this.fresh,
-    this.author,
-    this.id,
+    this.shareUser = '',
+    this.niceShareDate = '',
+    this.title = '',
+    this.collect = false,
+    this.link = '',
+    this.type = 0,
+    this.fresh = false,
+    this.author = '',
+    this.id = 0,
   });
 
   HomeArticleModel.fromJson(Map<String, dynamic> json)

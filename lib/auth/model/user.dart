@@ -1,3 +1,11 @@
+/*
+ * @Author: zhangzhong
+ * @Date: 2021-09-13 14:34:21
+ * @LastEditors: zhangzhong
+ * @LastEditTime: 2021-09-13 15:39:34
+ * @Description: Do not edit
+ * @FilePath: /play_android/lib/auth/model/user.dart
+ */
 class User {
   final bool admin;
   final String email;
@@ -9,20 +17,20 @@ class User {
   final String token;
   final int type;
   final String username;
-  final List chapterTops;
-  final List collectIds;
+  final List? chapterTops;
+  final List? collectIds;
 
   User({
-    this.admin,
-    this.email,
-    this.icon,
-    this.id,
-    this.nickname,
-    this.password,
-    this.publicName,
-    this.token,
-    this.type,
-    this.username,
+    this.admin = false,
+    this.email = '',
+    this.icon = '',
+    this.id = 0,
+    this.nickname = '',
+    this.password = '',
+    this.publicName = '',
+    this.token = '',
+    this.type = 0,
+    this.username = '',
     this.chapterTops,
     this.collectIds,
   });

@@ -1,3 +1,11 @@
+/*
+ * @Author: zhangzhong
+ * @Date: 2021-09-13 14:34:21
+ * @LastEditors: zhangzhong
+ * @LastEditTime: 2021-09-13 15:36:30
+ * @Description: Do not edit
+ * @FilePath: /play_android/lib/common/http_utlis.dart
+ */
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,9 +20,9 @@ import 'package:play_android/common/index.dart';
 enum Status { succeed, failed, error } // 接口请求成功，失败，异常
 
 class HttpResp<T> {
-  final T data;
+  final T? data;
   final dynamic exception;
-  final Status status;
+  final Status? status;
   HttpResp({
     this.data,
     this.exception,
@@ -48,7 +56,7 @@ class HttpUtlis {
   }
 
   /// post请求
-  static Future post(String url, {Map params}) async {
+  static Future post(String url, {Map<String, dynamic>? params}) async {
     try {
       _addCookies();
       Response response = await _dio.post(url, queryParameters: params);

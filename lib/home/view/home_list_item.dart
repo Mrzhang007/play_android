@@ -7,9 +7,9 @@ import 'package:play_android/home/model/home_article_model.dart';
 
 class HomeListItem extends StatelessWidget {
   HomeListItem({
-    Key key,
-    @required this.itemData,
-    @required this.onCollectPressed,
+    Key? key,
+    required this.itemData,
+    required this.onCollectPressed,
   }) : super(key: key);
 
   final HomeArticleModel itemData;

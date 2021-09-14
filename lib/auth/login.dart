@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
   FocusNode _pwdFocusNode = FocusNode();
   // FocusScopeNode _focusScopeNode;
 
-  String _pwd;
+  String _pwd = '';
   TextEditingController _userNameController = TextEditingController();
 
   @override
