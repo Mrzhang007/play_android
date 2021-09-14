@@ -20,7 +20,7 @@ enum LoadMoreStatus {
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
-  bool get wantKeepAlive => true; //保存状态
+  bool get wantKeepAlive => true; // 切换底部Tab时候 保存状态
 
   ScrollController _controller = ScrollController();
   var _listData = <HomeArticleModel>[];
@@ -62,7 +62,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     _loadHomeData(isLoadMore: true);
   }
 
-  void _loadHomeData({bool isLoadMore = false}) async {
+  Future _loadHomeData({bool isLoadMore = false}) async {
     String url = Api.articleList + '$_currentPage/json';
     if (!isLoadMore) {
       HttpResp httpResp = await HttpUtlis.get(Api.articleTop);
@@ -70,6 +70,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         List data = httpResp.data;
         List<HomeArticleModel> listDate =
             HomeArticleModel.objectArrayWithKeyValuesArray(data);
+        _listData.clear(); // 刷新需要清空数据，
         _listData.addAll(listDate);
       }
     }
@@ -105,9 +106,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     _isRefreshing = true;
     print('上拉刷新');
     _currentPage = 0;
-    _listData.clear(); //刷新需要清空数据，
-    _loadHomeData();
-    return null;
+    await _loadHomeData(); // _onRefresh需要有async和await关键字，没有await，刷新图标立马消失，没有async，刷新图标不会消失
   }
 
   @override
@@ -143,8 +142,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                 },
               );
             },
-            separatorBuilder: (BuildContext context, int index) =>
-                Divider(height: .0),
+            separatorBuilder: (BuildContext context, int index) => Divider(),
           ),
         ));
   }

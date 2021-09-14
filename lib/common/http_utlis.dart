@@ -2,11 +2,12 @@
  * @Author: zhangzhong
  * @Date: 2021-09-13 14:34:21
  * @LastEditors: zhangzhong
- * @LastEditTime: 2021-09-13 15:36:30
+ * @LastEditTime: 2021-09-14 16:08:20
  * @Description: Do not edit
  * @FilePath: /play_android/lib/common/http_utlis.dart
  */
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -39,7 +40,7 @@ class HttpUtlis {
       _addCookies();
       Response response = await _dio.get(url);
       Map<String, dynamic> responseMap = response.data;
-      print('GET请求返回数据----------->' + responseMap.toString());
+      log('GET请求返回数据----------->$responseMap');// 解决print输出不全的问题
       if (responseMap['errorCode'] == 0) {
         //成功后可能接着请求。所以不closeAllLoading
         return HttpResp(
