@@ -2,7 +2,7 @@
  * @Author: zhangzhong
  * @Date: 2021-09-13 14:34:21
  * @LastEditors: zhangzhong
- * @LastEditTime: 2021-09-13 15:01:32
+ * @LastEditTime: 2021-09-15 10:43:59
  * @Description: Do not edit
  * @FilePath: /play_android/lib/common/routes.dart
  */
@@ -22,8 +22,8 @@ class RouteName {
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return {
-    'home': (context) => Home(),
-    'homeDetail': (context) {
+    RouteName.home: (context) => Home(),
+    RouteName.homeDetail: (context) {
       Map<String, dynamic> args =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
       return HomeDetail(
@@ -31,7 +31,7 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
         title: args['title'],
       );
     },
-    'register': (context) => Register(),
-    'login': (context) => Login(),
+    RouteName.register: (context) => Register(),
+    RouteName.login: (context) => Login(),
   };
 }

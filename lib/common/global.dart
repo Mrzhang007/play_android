@@ -2,7 +2,7 @@
  * @Author: zhangzhong
  * @Date: 2021-09-13 14:34:21
  * @LastEditors: zhangzhong
- * @LastEditTime: 2021-09-14 14:47:21
+ * @LastEditTime: 2021-09-15 11:21:11
  * @Description: Do not edit
  * @FilePath: /play_android/lib/common/global.dart
  */
@@ -20,29 +20,24 @@ class Global {
   static String password = '';
 
   static Future init() async {
-    try {
-      _prefs = await SharedPreferences.getInstance();
-      print('用户信息-------->>>$_prefs');
-      var userInfoStr = _prefs.getString(KString.userInfoKey);
-      print('用户信息-------->>>$userInfoStr');
-      if (userInfoStr != null) {
-        try {
-          Map<String, dynamic> userInfo =
-              jsonDecode(userInfoStr) as Map<String, dynamic>;
-          user = User.fromJson(userInfo);
-          isLogin = true;
-        } catch (e) {
-          print('global init error$e');
-          isLogin = false;
-        }
-      } else {
+    _prefs = await SharedPreferences.getInstance();
+    var userInfoStr = _prefs.getString(KString.userInfoKey);
+    print('用户信息-------->>>$userInfoStr');
+    if (userInfoStr != null) {
+      try {
+        Map<String, dynamic> userInfo =
+            jsonDecode(userInfoStr) as Map<String, dynamic>;
+        user = User.fromJson(userInfo);
+        isLogin = true;
+      } catch (e) {
+        print('global init error$e');
         isLogin = false;
       }
-      // 密码
-      var pwd = _prefs.getString(KString.passwordKey);
-      if (pwd != null) password = pwd;
-    } catch (error) {
-      print('global init error_Future_$error');
+    } else {
+      isLogin = false;
     }
+    // 密码
+    var pwd = _prefs.getString(KString.passwordKey);
+    if (pwd != null) password = pwd;
   }
 }

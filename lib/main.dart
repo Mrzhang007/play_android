@@ -2,7 +2,7 @@
  * @Author: zhangzhong
  * @Date: 2021-09-13 14:34:21
  * @LastEditors: zhangzhong
- * @LastEditTime: 2021-09-13 16:18:36
+ * @LastEditTime: 2021-09-15 11:20:53
  * @Description: Do not edit
  * @FilePath: /play_android/lib/main.dart
  */
@@ -15,6 +15,7 @@ import 'package:play_android/common/global.dart';
 import 'package:play_android/common/routes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // 必须确保执行之后再调用SharedPreferences，不然会崩溃
   Global.init().then((e) => runApp(new MyApp()));
 }
 
