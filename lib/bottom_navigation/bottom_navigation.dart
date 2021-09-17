@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:play_android/auth/login.dart';
 import 'package:play_android/home/home.dart';
+import 'package:play_android/mine/mine.dart';
 import 'package:play_android/project/project.dart';
 import 'package:play_android/common/index.dart';
 
@@ -23,6 +25,26 @@ class _BottomNavigationState extends State<BottomNavigation>
   }
 
   void _onItemTapped(int index) {
+    if (index == 3) {
+      if (Global.isLogin) {
+        _changeTab(index);
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return Login();
+            },
+            fullscreenDialog: true,
+          ),
+        );
+      }
+    } else {
+      _changeTab(index);
+    }
+  }
+
+  void _changeTab(int index) {
     _controller.jumpToPage(index);
     setState(() {
       _selectedIndex = index;
@@ -38,6 +60,7 @@ class _BottomNavigationState extends State<BottomNavigation>
           Home(),
           Text('page 1'),
           Project(),
+          Mine(),
         ],
         physics: NeverScrollableScrollPhysics(),
       ),
@@ -55,10 +78,15 @@ class _BottomNavigationState extends State<BottomNavigation>
             icon: Icon(Icons.school),
             label: KString.bottom_nav_project,
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: KString.bottom_nav_mine,
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

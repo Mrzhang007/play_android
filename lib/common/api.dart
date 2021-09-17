@@ -18,5 +18,11 @@ class Api {
   static const String collect = '$host/lg/collect/';
 
   /// 取消收藏   文章id，拼接在链接中。
-  static const String uncollect = '$host/lg/uncollect_originId/';
+  static const String unCollect = '$host/lg/uncollect_originId/';
+
+  /// 首页banner  https://www.wanandroid.com/banner/json
+  static const String homeBanner = '$host/banner/json';
+
+  /// 退出登录 https://www.wanandroid.com/user/logout/json
+  static const String logout = '$host/user/logout/json';
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:play_android/common/api.dart';
 import 'package:play_android/common/index.dart';
 import 'package:play_android/home/model/home_article_model.dart';
+import 'package:play_android/home/model/home_banner_model.dart';
+import 'package:play_android/home/view/home_banner.dart';
 import 'package:play_android/home/view/home_list_item.dart';
 
 class Home extends StatefulWidget {
@@ -25,9 +27,11 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   ScrollController _controller = ScrollController();
   var _listData = <HomeArticleModel>[];
   int _currentPage = 0;
-  LoadMoreStatus _loadMorestatus = LoadMoreStatus.complete;
+  LoadMoreStatus _loadMoreStatus = LoadMoreStatus.complete;
   bool _isRefreshing = false;
   var _loginSubscription;
+  var _logoutSubscription;
+  List<HomeBannerModel> _bannerDataList = []; // banner数据
 
   @override
   void initState() {
@@ -44,6 +48,9 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       print('==========dddd....>>>' + event.toString());
       _onRefresh(); // 刷新首页数据
     });
+    _logoutSubscription = eventBus.on<UserLogoutEvent>().listen((event) {
+      _onRefresh(); // 刷新首页数据
+    });
   }
 
   @override
@@ -51,18 +58,25 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     super.dispose();
     // 取消订阅
     _loginSubscription.cancel();
+    _logoutSubscription.cancel();
   }
 
   void _onLoadMore() {
-    if (_loadMorestatus == LoadMoreStatus.isLoading) return;
+    if (_loadMoreStatus == LoadMoreStatus.isLoading) return;
     if (_isRefreshing) return;
     setState(() {
-      _loadMorestatus = LoadMoreStatus.isLoading;
+      _loadMoreStatus = LoadMoreStatus.isLoading;
     });
     _loadHomeData(isLoadMore: true);
   }
 
   Future _loadHomeData({bool isLoadMore = false}) async {
+    // 获取banner数据
+    HttpResp bannerResp = await HttpUtlis.get(Api.homeBanner);
+    if (bannerResp.status == Status.succeed) {
+      List data = bannerResp.data;
+      _bannerDataList = HomeBannerModel.objectArrayWithKeyValuesArray(data);
+    }
     String url = Api.articleList + '$_currentPage/json';
     if (!isLoadMore) {
       HttpResp httpResp = await HttpUtlis.get(Api.articleTop);
@@ -87,11 +101,13 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         //加载更多
         setState(() {
           _listData.addAll(listDate);
-          _loadMorestatus = LoadMoreStatus.complete;
+          _loadMoreStatus = LoadMoreStatus.complete;
+          _bannerDataList = _bannerDataList;
         });
       } else {
         setState(() {
           _listData.addAll(listDate);
+          _bannerDataList = _bannerDataList;
         });
         //下拉刷新之后 更新刷新状态
         _isRefreshing = false;
@@ -101,7 +117,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   Future _onRefresh() async {
-    if (_loadMorestatus == LoadMoreStatus.isLoading) return;
+    if (_loadMoreStatus == LoadMoreStatus.isLoading) return;
     if (_isRefreshing) return;
     _isRefreshing = true;
     print('上拉刷新');
@@ -113,37 +129,66 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('首页'),
-        ),
-        body: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: ListView.separated(
-            controller: _controller,
-            itemCount: _listData.length + 1,
-            itemBuilder: (BuildContext context, int index) {
-              if (_listData.length == index) {
-                // 显示加载跟多页面
-                return Container(
-                  padding: const EdgeInsets.all(16.0),
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                      width: 24.0,
-                      height: 24.0,
-                      child: CircularProgressIndicator(strokeWidth: 2.0)),
-                );
-              }
-              var item = _listData[index];
-              return HomeListItem(
-                itemData: item,
-                onCollectPressed: () {
-                  item.collect = !item.collect;
-                  setState(() {});
-                },
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) => Divider(),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: _buildCustomScrollView(),
+    );
+  }
+
+  void _onBannerClick(HomeBannerModel item, int pageIndex) {
+    Navigator.pushNamed(context, 'homeDetail', arguments: {
+      'url': item.url,
+      'title': item.title,
+    });
+  }
+
+  Widget _buildCustomScrollView() {
+    return new CustomScrollView(
+      controller: _controller,
+      slivers: [
+        SliverToBoxAdapter(
+          child: HomeBanner(
+            bannerDataList: _bannerDataList,
+            autoLoop: false,
+            bannerClick: _onBannerClick,
           ),
-        ));
+        ),
+        // 当列表项高度固定时，使用 SliverFixedExtendList 比 SliverList 具有更高的性能
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            _buildListItem,
+            childCount: _listData.length + 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildListItem(context, index) {
+    if (_listData.length == index) {
+      // 显示加载跟多页面
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        alignment: Alignment.center,
+        child: SizedBox(
+            width: 24.0,
+            height: 24.0,
+            child: CircularProgressIndicator(strokeWidth: 2.0)),
+      );
+    }
+    var item = _listData[index];
+    return HomeListItem(
+      itemData: item,
+      onCollectPressed: () {
+        item.collect = !item.collect;
+        setState(() {});
+      },
+    );
+    // return ListTile(title: Text('list tile index $index'));
   }
 }

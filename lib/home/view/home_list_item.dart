@@ -37,78 +37,80 @@ class HomeListItem extends StatelessWidget {
     String author = itemData.author;
     bool fresh = itemData.fresh;
     return TextButton(
-        onPressed: () => _onItemPress(context),
-        child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      onPressed: () => _onItemPress(context),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                    child: Text(itemData.title,
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: Color(0xFF000000),
+                          fontSize: 16,
+                        )),
+                  ),
+                  Row(
                     children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                        child: Text(itemData.title,
-                            maxLines: 2,
-                            style: TextStyle(
-                              color: Color(0xFF000000),
-                              fontSize: 16,
-                            )),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          type == 1 ? _tag(context, '置顶') : Text(''),
-                          fresh ? _tag(context, '新') : Text(''),
-                          Text(type == 1 ? '作者：$author' : '分享人：$shareUser',
+                      type == 1 ? _tag(context, '置顶') : Text(''),
+                      fresh ? _tag(context, '新') : Text(''),
+                      Text(type == 1 ? '作者：$author' : '分享人：$shareUser',
+                          style: TextStyle(
+                              color: Color(0xFF666666), fontSize: 14)),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Text('时间：$niceShareDate',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                               style: TextStyle(
                                   color: Color(0xFF666666), fontSize: 14)),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 10),
-                              child: Text('时间：$niceShareDate',
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      color: Color(0xFF666666), fontSize: 14)),
-                            ),
-                          )
-                        ],
+                        ),
                       )
                     ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    if (Global.isLogin) {
-                      //收藏功能
-                      _collect();
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Login();
-                            },
-                            fullscreenDialog: true,
-                          ));
-                    }
-                  },
-                  icon: Icon(
-                    Icons.favorite,
-                    color: collect
-                        ? Theme.of(context).primaryColor
-                        : Color(0xFFBFBFBF),
-                  ),
-                ),
-              ],
-            )));
+                  )
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                if (Global.isLogin) {
+                  //收藏功能
+                  _collect();
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return Login();
+                        },
+                        fullscreenDialog: true,
+                      ));
+                }
+              },
+              icon: Icon(
+                Icons.favorite,
+                color: collect
+                    ? Theme.of(context).primaryColor
+                    : Color(0xFFBFBFBF),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _collect() async {
     bool collect = itemData.collect;
     String url;
     if (collect) {
-      url = Api.uncollect + itemData.id.toString() + '/json';
+      url = Api.unCollect + itemData.id.toString() + '/json';
     } else {
       url = Api.collect + itemData.id.toString() + '/json';
     }
