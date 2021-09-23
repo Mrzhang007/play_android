@@ -39,7 +39,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^1.7.3
-  # json_serializable: ^5.0.0
+  json_serializable: ^4.1.4 # 自动生成Model工具
   flutter_test:
     sdk: flutter
 

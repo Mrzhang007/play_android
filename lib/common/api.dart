@@ -25,4 +25,10 @@ class Api {
 
   /// 退出登录 https://www.wanandroid.com/user/logout/json
   static const String logout = '$host/user/logout/json';
+
+  /// 体系 https://www.wanandroid.com/tree/json
+  static const String knowledgeTree = '$host/tree/json';
+
+  /// 知识体系下的文章 https://www.wanandroid.com/article/list/0/json?cid=60  分类的id，上述二级目录的id
+  static const String knowledgeArticleList = '$host/article/list/';
 }

@@ -3,7 +3,7 @@ class KString {
   static const String bottom_nav_home = '首页';
 
   /// 知识体系
-  static const String bottom_nav_knowledge = '知识体系';
+  static const String bottom_nav_knowledge = '体系';
 
   /// 项目
   static const String bottom_nav_project = '项目';
@@ -19,4 +19,7 @@ class KString {
 
   /// 缓存用户密码
   static const String passwordKey = 'passwordKey';
+
+  /// 请求出错提示
+  static const String commonErrorMsg = '出错了，请重试';
 }

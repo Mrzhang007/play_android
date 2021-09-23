@@ -5,6 +5,7 @@ import 'package:play_android/home/home.dart';
 import 'package:play_android/mine/mine.dart';
 import 'package:play_android/project/project.dart';
 import 'package:play_android/common/index.dart';
+import 'package:play_android/system/system.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -58,7 +59,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         controller: _controller,
         children: <Widget>[
           Home(),
-          Text('page 1'),
+          System(),
           Project(),
           Mine(),
         ],

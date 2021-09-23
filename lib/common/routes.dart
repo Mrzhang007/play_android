@@ -12,12 +12,16 @@ import 'package:play_android/home/home.dart';
 import 'package:play_android/home/home_detail.dart';
 import 'package:play_android/auth/register.dart';
 import 'package:play_android/auth/login.dart';
+import 'package:play_android/system/system.dart';
+import 'package:play_android/system/system_article_list.dart';
 
 class RouteName {
   static const String home = 'home';
   static const String homeDetail = 'homeDetail';
   static const String register = 'register';
   static const String login = 'login';
+  static const String system = 'system';
+  static const String systemArticleList = 'systemArticleList';
 }
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
@@ -33,5 +37,14 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     },
     RouteName.register: (context) => Register(),
     RouteName.login: (context) => Login(),
+    RouteName.system: (context) => System(),
+    RouteName.systemArticleList: (context) {
+      Map<String, dynamic> args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      return SystemArticleList(
+        id: args['id'],
+        name: args['name'],
+      );
+    },
   };
 }

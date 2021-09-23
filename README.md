@@ -29,3 +29,7 @@ samples, guidance on mobile development, and a full API reference.
 ### 增加cookie_jar库、保存用户名密码
 
 ### 增加event_bus库、订阅用户登录状态
+
+### 增加体系模块
+
+### Json转Dart Model类： json_serializable

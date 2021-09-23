@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:play_android/common/api.dart';
 import 'package:play_android/common/index.dart';
 import 'package:play_android/home/model/home_article_model.dart';
 import 'package:play_android/home/model/home_banner_model.dart';
 import 'package:play_android/home/view/home_banner.dart';
 import 'package:play_android/home/view/home_list_item.dart';
+import 'package:play_android/common/load_more_status.dart';
+import 'package:play_android/widget/loading_more_widget.dart';
+import 'package:play_android/widget/none_more_widget.dart';
 
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
   }
-}
-
-enum LoadMoreStatus {
-  isLoading,
-  complete,
-  noneMore,
 }
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
@@ -62,7 +58,8 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   void _onLoadMore() {
-    if (_loadMoreStatus == LoadMoreStatus.isLoading) return;
+    if (_loadMoreStatus == LoadMoreStatus.isLoading ||
+        _loadMoreStatus == LoadMoreStatus.noneMore) return;
     if (_isRefreshing) return;
     setState(() {
       _loadMoreStatus = LoadMoreStatus.isLoading;
@@ -171,15 +168,11 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
 
   Widget _buildListItem(context, index) {
     if (_listData.length == index) {
+      if (_loadMoreStatus == LoadMoreStatus.noneMore) {
+        return NoneMoreWidget();
+      }
       // 显示加载跟多页面
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        alignment: Alignment.center,
-        child: SizedBox(
-            width: 24.0,
-            height: 24.0,
-            child: CircularProgressIndicator(strokeWidth: 2.0)),
-      );
+      return LoadingMoreWidget();
     }
     var item = _listData[index];
     return HomeListItem(
