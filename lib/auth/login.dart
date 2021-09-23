@@ -10,6 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:play_android/common/index.dart';
 
 class Login extends StatefulWidget {
+  /// 登录成功是否需要跳转 我的页面
+  final bool loginPushMinePage;
+
+  Login({Key? key, this.loginPushMinePage = false}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _LoginState();
@@ -199,7 +204,11 @@ class _LoginState extends State<Login> {
     Global.init().then((e) {
       // 刷新首页数据
       eventBus.fire(UserLoggedInEvent(userInfo));
-      Navigator.pop(context);
+      if (widget.loginPushMinePage) {
+        Navigator.pop(context, true);
+      }else{
+        Navigator.pop(context);
+      }
     });
   }
 }

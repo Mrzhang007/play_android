@@ -53,13 +53,15 @@ class _SystemState extends State<System> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildBody() {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Row(
-        children: [
-          _buildLeftView(),
-          _buildRightView(),
-        ],
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(color: Colors.white),
+        child: Row(
+          children: [
+            _buildLeftView(),
+            _buildRightView(),
+          ],
+        ),
       ),
     );
   }

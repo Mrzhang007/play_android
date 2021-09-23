@@ -18,11 +18,22 @@ class _BottomNavigationState extends State<BottomNavigation>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   var _controller = PageController();
+  var _logoutSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _logoutSubscription = eventBus.on<UserLogoutEvent>().listen((event) {
+      // 退出登录回到首页
+      _changeTab(0);
+    });
+  }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _logoutSubscription.cancel();
   }
 
   void _onItemTapped(int index) {
@@ -34,11 +45,16 @@ class _BottomNavigationState extends State<BottomNavigation>
           context,
           MaterialPageRoute(
             builder: (context) {
-              return Login();
+              return Login(loginPushMinePage: true);
             },
             fullscreenDialog: true,
           ),
-        );
+        ).then((value) {
+          // print('------------$value');
+          if (value == true) {
+            _changeTab(index);
+          }
+        });
       }
     } else {
       _changeTab(index);

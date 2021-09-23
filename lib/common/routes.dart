@@ -12,6 +12,7 @@ import 'package:play_android/home/home.dart';
 import 'package:play_android/home/home_detail.dart';
 import 'package:play_android/auth/register.dart';
 import 'package:play_android/auth/login.dart';
+import 'package:play_android/mine/mine.dart';
 import 'package:play_android/system/system.dart';
 import 'package:play_android/system/system_article_list.dart';
 
@@ -22,6 +23,7 @@ class RouteName {
   static const String login = 'login';
   static const String system = 'system';
   static const String systemArticleList = 'systemArticleList';
+  static const String mine = 'mine';
 }
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
@@ -46,5 +48,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
         name: args['name'],
       );
     },
+    RouteName.mine: (context) => Mine(),
   };
 }
